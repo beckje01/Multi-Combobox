@@ -1,0 +1,37 @@
+import javascript.tasks.MinifierCommand
+
+apply plugin: 'jslib'
+
+version = 1.1
+
+javascript {
+   filterPatterns << [
+         ~/\s*console.log\(.*?;/,
+         ~/\s*alert\(.*?;/
+   ]
+   minifier = {
+   	   
+      inputParam = "--js"
+      outputParam = "--js_output_file"
+      operands << ["java", "-jar", "${project.gradle.gradleHomeDir}/lib/plugins/closure-compiler.jar"]
+      options << ["--compilation_level": "SIMPLE_OPTIMIZATIONS"]
+   }
+}
+
+sourceSets {
+       main {
+        javascript {
+            srcDir 'js/'
+        }
+
+    }
+}
+
+artifacts {
+   javascript jsArtifact("build/classes/main", "jquery-ui-multicombobox")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.0-milestone-2'
+    jarFile = 'wrapper/wrapper.jar'
+}
